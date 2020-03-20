@@ -13,7 +13,7 @@ from sklearn.linear_model import SGDRegressor
 from skfeature.function.information_theoretical_based import MRMR
 from sklearn.neural_network import MLPRegressor
 from skfeature.function.similarity_based import fisher_score
-from sklearn.model_selection import GridSearchCV as GreedSCV
+# from sklearn.model_selection import GridSearchCV as GreedSCV  # библиотека для перебора
 # Библиотеки общего назначения
 import numpy as np
 import pandas as pd
@@ -31,83 +31,103 @@ from sklearn.utils.multiclass import unique_labels
 
 
 class Dataset:
-    """ Класс для работы с обучающей выборкой
+    """ Класс для работы с обучающей выборкой.
 
         Attributes:
-            feature_header:     названия признаков
-            features:           матрица, содержащая признаки
-            targets:            целевые векторы
+            feature_header:     названия признаков.
+            features:           матрица, содержащая признаки.
+            targets_vect(np.array):  one-hot целевые векторы.
+            targets:            массив идентификаторов.
+            class_names:        уникальные имена классов.
+            filename(str):      имя файла базы векторов признаков.
 
     """
 
     def __init__(self, filename=None):
-        self.feature_header = None  # header
-        self.features = None        # feature vectors
-        self.targets_vect = None    # targets one-hot vectors
-        self.targets = None         # targets ids
-        self._names_ids = None      # class names
-        self.class_names = None
+        """ Конструктор объекта класса.
+
+        Args:
+            filename(str): название файла.
+        
+        """
+        self.feature_header = None  # заголовок признаков
+        self.features = None        # векторы признаков
+        self.targets_vect = None    # one-hot целевые векторы
+        self.targets = None         # идентификаторы классов
+        self._names_ids = None      # словарь имя->идентификатор
+        self.class_names = None     # уникальные имена классов
         if filename is not None:
-            self.filename = filename
+            self.filename = filename    # имя файла базы векторов признаков
             self.load_csv(filename)
         else:
             self.filename = ''
 
     def load_data(self, x, y):
+        """ Сохраняет данные в объект, выделяет уникальные имена классов.
+        
+        Args:
+            x: векторы признаков, расположенные по строкам.
+            y: названия классов.
+
+        """
         self.features = x
         self.targets = y
         self.class_names = unique_labels(y)
 
     def load_csv(self, filename):
-        """ Загрузить данные из .csv файла
+        """ Загрузить данные из .csv файла базы векторов признаков.
 
         Args:
-            filename(str): имя csv файла, в котором содержится выборка
+            filename(str): имя csv файла, в котором содержится выборка.
 
         """
         # input format: [ f_1, f_2, ..., f_n, t ], header id included in csv
-        in_data = pd.read_csv(filename)         # загрузить csv с данными
-        self.feature_header = in_data.columns[:-1]  # извлечь заголовок таблицы
-        self.features = in_data.values[:, :-1].astype(np.float64)      # извлеч значения признаков
-        self.targets, unique_names = pd.factorize(in_data.values[:, -1], sort=1)  # get unique values
-        self.targets_vect = np.array(pd.get_dummies(self.targets))
-
+        in_data = pd.read_csv(filename)                                 # загрузить csv с данными
+        self.feature_header = in_data.columns[:-1]                      # извлечь заголовок таблицы
+        self.features = in_data.values[:, :-1].astype(np.float64)       # извлечь значения признаков
+        self.targets, unique_names = pd.factorize(in_data.values[:, -1], sort=1)  # получить id и имена классов
+        self.targets_vect = np.array(pd.get_dummies(self.targets))      # сформировать one-hot векторы
         self._names_ids = dict(zip(
-            unique_names, range(len(unique_names))
+            unique_names, range(len(unique_names))      # сформировать словарь имя-id
         ))
-        self.class_names = unique_names
+        self.class_names = unique_names                 # записть в объект уникальные имена классов
 
     def get_fisher_scores(self, max_dim):
         """ Получить меру Фишера и качество распознавания на основе AUC ROC.
 
+        Выполняется отбор признаков для размерностей пространства признаков от 1 до max_dim. Для каждой размерности
+        выполняется перекрестная проверка (cross-validation) и вычисляется интегральное значение меры Фишера и
+        среднее по всем подвыборкам значение меры AUC ROC.
+
         Args:
 
-            max_dim(int): число признаков до которого следует производить отбор
+            max_dim(int): число признаков до которого следует производить отбор.
 
         Returns:
 
-            :return fisher_summary_scores: - вычисленные суммарные значения меры Фишера
-            :return auc_roc_scores: - вычисленные значения площади под кривой ROC
+            fisher_summary_scores: - вычисленные суммарные значения меры Фишера.
+            auc_roc_scores: - вычисленные значения площади под кривой ROC.
 
         """
-        x_train = scale(self.features)  # feature normalization
-        y_train = self.targets  #
+
+        x_train = scale(self.features)                          # normalize features
+        y_train = self.targets                                  # target ids
         # Fisher score estimation
-        f_score = fisher_score.fisher_score(x_train, y_train)   # compute fisher score
+        f_score = fisher_score.fisher_score(x_train, y_train)   # calculate Fisher score value
         ranked_f_score = fisher_score.feature_ranking(f_score)  # rank features
         print('Последовательность отобранных коэффициентов:')
         print(*list(self.feature_header[ranked_f_score[0:max_dim]]), sep=', ')
-        fisher_summary_scores = list(it.accumulate(f_score[ranked_f_score[0:max_dim]]))
+        fisher_summary_scores = list(it.accumulate(f_score[ranked_f_score[0:max_dim]]))     # integral Fisher scores
         # Cross validation
-        k_fold = KFold(n_splits=5, shuffle=True)    # define CV pattern
-        ar_scorer = make_scorer(roc_auc_score)      # make scorer
-        clf = SGDRegressor(max_iter=100, tol=1e-3, random_state=241)  # stochastic gradient descend regressor as a clf
-        auc_roc_scores = []
+        k_fold = KFold(n_splits=5, shuffle=True)                # setup cross-validation pattern
+        ar_scorer = make_scorer(roc_auc_score)                  # make scorer
+        clf = SGDRegressor(max_iter=100, tol=1e-3, random_state=241)  # stochastic gradient descend regression as a clf
+        auc_roc_scores = []                                     # list for AUC ROC values
         for i in range(1, max_dim + 1):  # iterate by number of features selected
-            features = x_train[:, ranked_f_score[0:i]]  # select features
+            features = x_train[:, ranked_f_score[0:i]]          # select features
             t = y_train
             vect_auc_roc_score = cross_val_score(clf, features, t, scoring=ar_scorer, cv=k_fold)  # train
-            auc_roc_scores.append(np.mean(vect_auc_roc_score))
+            auc_roc_scores.append(np.mean(vect_auc_roc_score))  # add mean (over CV-subsets) AUC ROC value
 
         return fisher_summary_scores, auc_roc_scores
 
@@ -115,9 +135,10 @@ class Dataset:
         """ Итеративно выполняет отбор признаков на основе меры "minimal redundancy maximum relevance" (MRMR).
 
             Args:
-                max_dim(int): предельное число признаков, которые следует отобрать
+                max_dim(int): предельное число признаков, которые следует отобрать.
 
         """
+
         x_train = scale(self.features)    # feature normalization
         y_train = self.targets                  # targets vector
 
@@ -139,9 +160,18 @@ def plot_confusion_matrix(y_true, y_pred, classes,
                           graphic=False,
                           title=None,
                           cmap=ppl.cm.get_cmap('Blues')):
-    """
-    This function prints and plots the confusion matrix.
-    Normalization can be applied by setting `normalize=True`.
+    """ Вывести рисунок с матрицами ошибок.
+    Нормированные матрицы могут быть получены.
+
+    Args:
+        y_true:     целевые векторы.
+        y_pred:     векторы, предсказанные алгоритмом.
+        classes:    задать вручную имена классов для подписи.
+        normalize:  нормированные/абсолютные значения ошибок.
+        graphic:    вывести на дисплей.
+        title:      задать вручную значение заголовка.
+        cmap:       задать вречную цвета матрицы.
+
     """
     # Compute confusion matrix
     cm = confusion_matrix(y_true, y_pred)
@@ -190,12 +220,20 @@ def plot_confusion_matrix(y_true, y_pred, classes,
 
 # вывод информации
 def data_out(llval_train, llval_test, lr):
-    train_length = len(llval_train)     # число итераций
+    """ Вывод графической информации - рисование графиков .
+        
+    Args:
+        llval_train.
+        llval_test.
+        lr: скорость обучения.
+
+    """
+    train_length = len(llval_train)     #
     test_length = len(llval_test)       #
     ppl.figure()
     ppl.plot(range(1, train_length+1), llval_train, 'r')    # график ошибки на обучающей выборке
     ppl.plot(range(1, test_length+1), llval_test, 'b:')     # график ошибки на проверочной выборке
-    ppl.title('Learn rate= ' + str(lr))
+    ppl.title('Learn rate= ' + str(lr))                     #
     ppl.show()
     print('Min val test_n')
     print(str(np.min(llval_test)) + ' ' + str(np.argmin(llval_test) + 1))
@@ -261,18 +299,21 @@ def clf_assessment(clf, xtr=None, ytr=None, xts=None, yts=None, class_names=None
                    clf_name=None, fspace='fs',
                    png=False):
     """
-    Оценка классификатора: вычисление перекрестной энтропии и матрицы ошибок
+    Оценка классификатора: вычисление перекрестной энтропии и матрицы ошибок.
 
-    :param clf: классифиувтор
-    :param xtr: обучающая выборка
-    :param ytr: целевой вектор обучающей выборки
-    :param xts: тестовый выборка
-    :param yts: целевой вектор тестовой выборки
-    :param class_names: имена классов для подписи строк и столюцов матрицы
-    :param clf_name: названия классификатора для заголовка рисунка
-    :param fspace: название признаков для заголовка рисунка
-    :param png: сохранить матрицу в файл и продолжить: True - сохранить png, False - показать результат
-    :return: матрица ошибок
+    Args:
+        clf: классифиувтор.
+        xtr: обучающая выборка.
+        ytr: целевой вектор обучающей выборки.
+        xts: тестовый выборка.
+        yts: целевой вектор тестовой выборки.
+        class_names: имена классов для подписи строк и столюцов матрицы.
+        clf_name: названия классификатора для заголовка рисунка.
+        fspace: название признаков для заголовка рисунка.
+        png: сохранить матрицу в файл и продолжить: True - сохранить png, False - показать результат.
+
+    Returns:
+        матрица ошибок.
     """
     if clf_name is None:
         clf_name = str(clf).split('(')[0]

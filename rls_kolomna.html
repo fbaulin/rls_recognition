@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module rls_kolomna</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>rls_kolomna</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:d%3A%5Cprojects%5Ckolomna%5Ckolomna%5Crls_kolomna.py">d:\projects\kolomna\kolomna\rls_kolomna.py</a></font></td></tr></table>
+    <p><tt>Created&nbsp;on&nbsp;Wed&nbsp;Jul&nbsp;10&nbsp;19:07:33&nbsp;2019<br>
+Модуль&nbsp;выполняет&nbsp;обучение&nbsp;классификатора<br>
+@author:&nbsp;eXabicher</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="skfeature.function.information_theoretical_based.MRMR.html">skfeature.function.information_theoretical_based.MRMR</a><br>
+<a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top><a href="skfeature.function.similarity_based.fisher_score.html">skfeature.function.similarity_based.fisher_score</a><br>
+<a href="itertools.html">itertools</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="pandas.html">pandas</a><br>
+</td><td width="25%" valign=top><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="rls_kolomna.html#Dataset">Dataset</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Dataset">class <strong>Dataset</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Dataset">Dataset</a>(filename=None)<br>
+&nbsp;<br>
+Класс&nbsp;для&nbsp;работы&nbsp;с&nbsp;обучающей&nbsp;выборкой.<br>
+&nbsp;<br>
+Attributes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;feature_header:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;названия&nbsp;признаков.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;features:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;матрица,&nbsp;содержащая&nbsp;признаки.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;targets_vect(np.array):&nbsp;&nbsp;one-hot&nbsp;целевые&nbsp;векторы.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;targets:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;массив&nbsp;идентификаторов.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class_names:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;уникальные&nbsp;имена&nbsp;классов.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;имя&nbsp;файла&nbsp;базы&nbsp;векторов&nbsp;признаков.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Dataset-__init__"><strong>__init__</strong></a>(self, filename=None)</dt><dd><tt>Конструктор&nbsp;объекта&nbsp;класса.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;название&nbsp;файла.</tt></dd></dl>
+
+<dl><dt><a name="Dataset-get_fisher_scores"><strong>get_fisher_scores</strong></a>(self, max_dim)</dt><dd><tt>Получить&nbsp;меру&nbsp;Фишера&nbsp;и&nbsp;качество&nbsp;распознавания&nbsp;на&nbsp;основе&nbsp;AUC&nbsp;ROC.<br>
+&nbsp;<br>
+Выполняется&nbsp;отбор&nbsp;признаков&nbsp;для&nbsp;размерностей&nbsp;пространства&nbsp;признаков&nbsp;от&nbsp;1&nbsp;до&nbsp;max_dim.&nbsp;Для&nbsp;каждой&nbsp;размерности<br>
+выполняется&nbsp;перекрестная&nbsp;проверка&nbsp;(cross-validation)&nbsp;и&nbsp;вычисляется&nbsp;интегральное&nbsp;значение&nbsp;меры&nbsp;Фишера&nbsp;и<br>
+среднее&nbsp;по&nbsp;всем&nbsp;подвыборкам&nbsp;значение&nbsp;меры&nbsp;AUC&nbsp;ROC.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;max_dim(int):&nbsp;число&nbsp;признаков&nbsp;до&nbsp;которого&nbsp;следует&nbsp;производить&nbsp;отбор.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fisher_summary_scores:&nbsp;-&nbsp;вычисленные&nbsp;суммарные&nbsp;значения&nbsp;меры&nbsp;Фишера.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;auc_roc_scores:&nbsp;-&nbsp;вычисленные&nbsp;значения&nbsp;площади&nbsp;под&nbsp;кривой&nbsp;ROC.</tt></dd></dl>
+
+<dl><dt><a name="Dataset-get_mrmr_score"><strong>get_mrmr_score</strong></a>(self, max_dim)</dt><dd><tt>Итеративно&nbsp;выполняет&nbsp;отбор&nbsp;признаков&nbsp;на&nbsp;основе&nbsp;меры&nbsp;"minimal&nbsp;redundancy&nbsp;maximum&nbsp;relevance"&nbsp;(MRMR).<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;max_dim(int):&nbsp;предельное&nbsp;число&nbsp;признаков,&nbsp;которые&nbsp;следует&nbsp;отобрать.</tt></dd></dl>
+
+<dl><dt><a name="Dataset-load_csv"><strong>load_csv</strong></a>(self, filename)</dt><dd><tt>Загрузить&nbsp;данные&nbsp;из&nbsp;.csv&nbsp;файла&nbsp;базы&nbsp;векторов&nbsp;признаков.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;имя&nbsp;csv&nbsp;файла,&nbsp;в&nbsp;котором&nbsp;содержится&nbsp;выборка.</tt></dd></dl>
+
+<dl><dt><a name="Dataset-load_data"><strong>load_data</strong></a>(self, x, y)</dt><dd><tt>Сохраняет&nbsp;данные&nbsp;в&nbsp;объект,&nbsp;выделяет&nbsp;уникальные&nbsp;имена&nbsp;классов.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x:&nbsp;векторы&nbsp;признаков,&nbsp;расположенные&nbsp;по&nbsp;строкам.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y:&nbsp;названия&nbsp;классов.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-c_sigm"><strong>c_sigm</strong></a>(y_pred)</dt><dd><tt>#&nbsp;расчет&nbsp;вероятности&nbsp;с&nbsp;помощью&nbsp;сигмоидальной&nbsp;функции</tt></dd></dl>
+ <dl><dt><a name="-clf_assessment"><strong>clf_assessment</strong></a>(clf, xtr=None, ytr=None, xts=None, yts=None, class_names=None, clf_name=None, fspace='fs', png=False)</dt><dd><tt>Оценка&nbsp;классификатора:&nbsp;вычисление&nbsp;перекрестной&nbsp;энтропии&nbsp;и&nbsp;матрицы&nbsp;ошибок.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clf:&nbsp;классифиувтор.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;xtr:&nbsp;обучающая&nbsp;выборка.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ytr:&nbsp;целевой&nbsp;вектор&nbsp;обучающей&nbsp;выборки.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;xts:&nbsp;тестовый&nbsp;выборка.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;yts:&nbsp;целевой&nbsp;вектор&nbsp;тестовой&nbsp;выборки.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class_names:&nbsp;имена&nbsp;классов&nbsp;для&nbsp;подписи&nbsp;строк&nbsp;и&nbsp;столюцов&nbsp;матрицы.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clf_name:&nbsp;названия&nbsp;классификатора&nbsp;для&nbsp;заголовка&nbsp;рисунка.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fspace:&nbsp;название&nbsp;признаков&nbsp;для&nbsp;заголовка&nbsp;рисунка.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;png:&nbsp;сохранить&nbsp;матрицу&nbsp;в&nbsp;файл&nbsp;и&nbsp;продолжить:&nbsp;True&nbsp;-&nbsp;сохранить&nbsp;png,&nbsp;False&nbsp;-&nbsp;показать&nbsp;результат.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;матрица&nbsp;ошибок.</tt></dd></dl>
+ <dl><dt><a name="-clf_compare"><strong>clf_compare</strong></a>(dataset=None, t=None, filename=None, n_estimators_tree=80, n_estimators_gbc=30)</dt><dd><tt>#&nbsp;сравнение&nbsp;классификаторов&nbsp;для&nbsp;РЛС&nbsp;"Коломна"</tt></dd></dl>
+ <dl><dt><a name="-data_out"><strong>data_out</strong></a>(llval_train, llval_test, lr)</dt><dd><tt>Вывод&nbsp;графической&nbsp;информации&nbsp;-&nbsp;рисование&nbsp;графиков&nbsp;.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;llval_train.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;llval_test.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;lr:&nbsp;скорость&nbsp;обучения.</tt></dd></dl>
+ <dl><dt><a name="-get_loss_staged"><strong>get_loss_staged</strong></a>(x, y, clf)</dt><dd><tt>#&nbsp;получение&nbsp;функции&nbsp;ошибок&nbsp;(кросэнтропийные&nbsp;потери)&nbsp;для&nbsp;gradboost&nbsp;на&nbsp;курсе&nbsp;Я</tt></dd></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>()</dt></dl>
+ <dl><dt><a name="-plot_confusion_matrix"><strong>plot_confusion_matrix</strong></a>(y_true, y_pred, classes, normalize=False, graphic=False, title=None, cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x000002683E657588&gt;)</dt><dd><tt>Вывести&nbsp;рисунок&nbsp;с&nbsp;матрицами&nbsp;ошибок.<br>
+Нормированные&nbsp;матрицы&nbsp;могут&nbsp;быть&nbsp;получены.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y_true:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;целевые&nbsp;векторы.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y_pred:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;векторы,&nbsp;предсказанные&nbsp;алгоритмом.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;classes:&nbsp;&nbsp;&nbsp;&nbsp;задать&nbsp;вручную&nbsp;имена&nbsp;классов&nbsp;для&nbsp;подписи.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;normalize:&nbsp;&nbsp;нормированные/абсолютные&nbsp;значения&nbsp;ошибок.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;graphic:&nbsp;&nbsp;&nbsp;&nbsp;вывести&nbsp;на&nbsp;дисплей.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;title:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;задать&nbsp;вручную&nbsp;значение&nbsp;заголовка.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cmap:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;задать&nbsp;вречную&nbsp;цвета&nbsp;матрицы.</tt></dd></dl>
+ <dl><dt><a name="-setup_gradboost"><strong>setup_gradboost</strong></a>(x_set, y_set, n_estimators=50)</dt><dd><tt>#&nbsp;подбор&nbsp;оптимальной&nbsp;скорости&nbsp;обучения&nbsp;градиентного&nbsp;бустинга&nbsp;по&nbsp;кросс-энтропии</tt></dd></dl>
+ <dl><dt><a name="-setup_random_forrest"><strong>setup_random_forrest</strong></a>(x_set, y_set)</dt></dl>
+</td></tr></table>
+</body></html>

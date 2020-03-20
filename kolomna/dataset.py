@@ -11,9 +11,9 @@ class Track:
     """ Класс для работы с траекториями
 
     Attributes:
-         points(TrackPoint):    массив с точками траектории
-         obj_id(str):           идентификатор объекта
-         filename(str):         имя исходного файла траетории
+         points(TrackPoint):    массив с точками траектории.
+         obj_id(str):           идентификатор объекта.
+         filename(str):         имя исходного файла траетории.
 
     """
     def __init__(self, filename=None):
@@ -28,8 +28,16 @@ class Track:
             else:
                 raise TypeError(f'Требуется имя файла, но передан объект {type(filename)}')
 
-    # загрузить данные из файла
     def load_data(self, filename: str, verbose=False):
+        """Обработать файл траектории данные из файла
+
+        Выполняет обработку выбранного файла данных (filename), и записывает (добавляет) данные в объект
+
+        Args:
+            filename(str): имя файла траектории.
+            verbose(bool): флаг текстового вывода статуса исполнения комманды.
+
+        """
         if verbose:
             print(f'Track file: {filename}')
         else:
@@ -57,6 +65,10 @@ class Track:
                 print(f'Иденитификатор точки #{point_obj.point_id} в {filename} не соответствуе идентификатору трека')
 
     def visualize(self):
+        """Визуализация трека.
+
+        Отладочная функция для просмотра изменения с принимаемого сигнала втечение регистрации трека.
+        """
         # track_values = [np.array(p.get_values_for_polarization(complex_component='Amp')) for p in self.points]
         track_values = []
         for p in self.points:
@@ -92,18 +104,34 @@ class Track:
         plt.show()
         del ani
 
-    # вывести отдельные вектора признаков для каждой точки зондирования
     def output_image_fvs(self, transform='afft', n_features=16, n_means=None):
-        # в цикле по точкам
-        # вывести их фрагменты, применив преобразование
+        """ Вывести отдельные вектора признаков для каждой точки зондирования.
+
+            В цикле по точкам вывести их фрагменты, применив преобразование.
+
+            Args:
+                transform(str): тип преобразования.
+                n_features(int): размерность вектора признаков.
+                n_means(int): усредняемых реализаций.
+
+            Returns:
+                кортеж, содержащий векторы признаков и цели.
+                (векторы признаков, цели),
+                где вектры признаков - матрица
+                    цели - вектора
+
+        """
         x = np.zeros([self.n_points, n_features])
         t = [self.obj_id]*self.n_points
         for i_point in range(self.n_points):
-            x[i_point] = self.points[i_point].get_feature_set(n_features=n_features, mode=transform)
+            if transform == 'afft':
+                x[i_point] = self.points[i_point].get_feature_set(n_features=n_features, mode=transform)
+            elif transform == 'doppler':
+                x[i_point] = self.points[i_point].get_doppler_fvs(n_features=n_features)
 
         if n_means is not None:
-            
-            n_datapoints = self.n_points//n_means 
+
+            n_datapoints = self.n_points//n_means
             if n_datapoints == 0:  # если траект. короче числа усредняемых реализаций
                 n_datapoints = 1
                 n_means = self.n_points
@@ -111,7 +139,7 @@ class Track:
             for i in range(0, n_datapoints):
                 # mean_x[i] = np.sum(x[i*3:i*3+n_means, :], axis=0)
                 mean_x[i] = np.sum(x[i*n_means:(i+1)*n_means, :], axis=0)
-            t = [self.obj_id]*(n_datapoints)
+            t = [self.obj_id]*n_datapoints
             # print(f'Trj #{self.track_id}:\t mean_x{mean_x.shape}, t({len(t)})')
             return mean_x, t
 
@@ -136,6 +164,19 @@ class Track:
 
     @staticmethod
     def set_to_csv(dset, filename="dataset.csv", n_features=16, n_means=None):
+        """ Запись базы данных в csv.
+        Для заданного набора данных сформировать векторы признаков и записать их в виде базы векторов признаков.
+
+        Args:
+            dset(list):         массив треков (объект класса Track).
+            filename(str):      файл в который осуществляется вывод (нужно указывать с расширением).
+            n_features(int):    размерность векторов признаков.
+            n_means(int):       число реализаций (TrackPoint объектов) по которым выполняется усреднение.
+
+        Returns:
+            Файл filename.csv, содеражащий размеченную базу векторов признаков.
+
+        """
         x_agg = []
         t_agg = []
         header = list(
@@ -157,15 +198,15 @@ class TrackPoint:
     """ Класс точки маршрута
 
     Attributes:
-        point_id(int):          идент. номер точки
-        n_azimuths(int):        число лучей по азимуту
-        azimuths(list):         список азимутов
-        n_ranges(int):          число элементов разрешения по дальности
-        obj_id(str):            идентификатор объекта
-        values(list):           значения сигнала в каналах - список[даль]{поляр:[действ., мним.]}
-        obj_range(float):       оценка расстояния до объекта
-        obj_azimuth(float):     оценка азимута объекта
-        track_id(int):          идентификационный номер траектории
+        point_id(int):          идент. номер точки.
+        n_azimuths(int):        число лучей по азимуту.
+        azimuths(list):         список азимутов.
+        n_ranges(int):          число элементов разрешения по дальности.
+        obj_id(str):            идентификатор объекта.
+        values(list):           значения сигнала в каналах - список[даль]{поляр:[действ., мним.]}.
+        obj_range(float):       оценка расстояния до объекта.
+        obj_azimuth(float):     оценка азимута объекта.
+        track_id(int):          идентификационный номер траектории.
 
     """
     def __init__(self, data: str):
@@ -202,9 +243,20 @@ class TrackPoint:
 
     # заполнить метаданные о точке
     def _extract_point_data(self, trackpoint_text):
-        self.azimuths = self._extract_num_array(trackpoint_text, '"AzimuthMass_deg"')
+        """ Парсинг текста с данными тракторного отсчета
+
+        На вход передается сегмент файла, содержащего данные одной точки из полученных данных извлекается
+        информация и записывается в качестве аттрибутов объекта.
+
+        Args:
+            trackpoint_text(str): фрагмент текстового файла, соответствующий одной пачке
+
+        Returns:
+            Результат парсинга заносится в текущий объект
+        """
+        self.azimuths = self._extract_num_array(trackpoint_text, '"AzimuthMass_deg"')   # извлеч азимут ант.
         self.n_azimuths = len(self.azimuths)
-        self.n_ranges = self._extract_value(trackpoint_text, '"NumRangesPack"')
+        self.n_ranges = self._extract_value(trackpoint_text, '"NumRangesPack"')         # число дальн. каналов
         self.point_id = self._extract_value(trackpoint_text, '"TrackPoint"')
         # get object type
         self.pos_time = self._extract_value(trackpoint_text, '"DateTimeFile"', val_type=str)
@@ -222,26 +274,25 @@ class TrackPoint:
         """ Сформировать массив значений, полученных с приемного устройства
 
         Args:
-            polar(str): тип поляризации - HighHor или HighVert
-            complex_component: компоненты None - обе, Re - действ, Im - мнимые, Amp - амплитуда (энергия)
+            polar(str):           тип поляризации - HighHor или HighVert
+            complex_component:    компоненты None - обе, Re - действ, Im - мнимые, Amp - амплитуда (энергия)
 
         Returns:
-            :return values: 0 - расстояние, 1 - азимуты, 2 - действ. и мнимая компоненты (если complex_component)
+            [list] -- 0 - расстояние, 1 - азимуты, 2 - действ. и мнимая компоненты (если complex_component)
 
         """
         values = []
         for i_range in range(self.n_ranges):
             values.append([[], ]*self.n_azimuths)
             for i_az in range(self.n_azimuths):
-                if complex_component is None:
+                if complex_component is None:       # записать [действ., мним.] компоненты
                     values[i_range][i_az] = [self.values[i_range][polar][0][i_az],
                                              self.values[i_range][polar][1][i_az]]
-                    pass
-                elif complex_component == 'Re':
+                elif complex_component == 'Re':     # записать действ. компоненту
                     values[i_range][i_az] = self.values[i_range][polar][0][i_az]
-                elif complex_component == 'Im':
+                elif complex_component == 'Im':     # записать мнимую компоненту
                     values[i_range][i_az] = self.values[i_range][polar][1][i_az]
-                elif complex_component == 'Amp':
+                elif complex_component == 'Amp':    # рассчитать амплитудное значение
                     values[i_range][i_az] = self.values[i_range][polar][0][i_az]**2 + \
                                             self.values[i_range][polar][1][i_az]**2
                 else:
@@ -251,49 +302,57 @@ class TrackPoint:
 
     # получить список признаков
     def get_feature_set(self, mode='afft', n_features=16):
-        """ Вывести строку признаков для одного радиоизображения
+        """ Вывести строку признаков для одной отметки (объекта TrackPoint)
 
         Args:
-            mode(str):              метод выделения признаков
-            n_features(int):            число отсчетов
+            mode(str):          метод выделения признаков
+            n_features(int):    число отсчетов
 
         Returns:
-            :return feature_set:    вектор признаков
+            вектор признаков
+
         """
         # собрать m матриц амплитуд для m каналов
         amplitudes = dict()
         az_shift = dict()
-        for current_pol in self.polar_channels:             # для каждого канала рассчитать амплитуду
+        for current_pol in self.polar_channels:             # для каждого канала поляризации рассчитать амплитуду
             loc_data = np.array(
-                self.get_values_for_polarization(polar=current_pol, complex_component='Amp'))
+                self.get_values_for_polarization(polar=current_pol, complex_component='Amp'))   # вытащить ампл. знач.
             # ra_shift = np.argmax(
             #     np.sum(loc_data, axis=1))                   # суммирование амплитуд по азимуту и выбор дальности
             # loc_data = loc_data[ra_shift, :]                # выделить информацию дальностного канала
-            loc_data = np.sum(loc_data, axis=0)
+            loc_data = np.sum(loc_data, axis=0)             #
             az_shift[current_pol] = np.argmax(loc_data)     # определение максимума
-            amplitudes[current_pol] = loc_data
+            amplitudes[current_pol] = loc_data              # сохранить амплитудные составл. компл. отсчетов
             if n_features > len(amplitudes[current_pol]):
                 print('Число признаков превышает число отсчетов в совокупных спектрах')
 
-        if mode == 'afft':
-            hor_sp = np.abs(np.fft.rfft(amplitudes[self.polar_channels[0]]))
-            hor_sp = hor_sp[:n_features//2]
-            hor_sp = hor_sp/np.mean(hor_sp)
+        if mode == 'afft':  # AFFT амплитудных компонент комплексных отсчетов по временной (=азимутальной) оси
+            hor_sp = np.abs(np.fft.rfft(amplitudes[self.polar_channels[0]]))    # form ampl. spectrum
+            hor_sp = hor_sp[:n_features//2]         # take half of spectrum (Hermitian symmetry)
+            hor_sp = hor_sp/np.mean(hor_sp)         # norm by mean value
             ver_sp = np.abs(np.fft.rfft(amplitudes[self.polar_channels[1]]))
             ver_sp = ver_sp[:n_features//2]
             ver_sp = ver_sp/np.mean(ver_sp)
-            return np.hstack((hor_sp, ver_sp))
+            return np.hstack((hor_sp, ver_sp))      # cat vert & horz pol spectrums in a single feature vector
         else:
             TypeError("Неподдерживаемый метод формирования векторов признаков")
 
     # вывести доплеровский спектр сигнала
-    def get_doppler_fvs(self):
+    def get_doppler_fvs(self, n_features=16):
         """ Вывести доплеровский спектр сигнала
+        Args:
+            n_features:          размерность вектора признаков
 
         Returns:
-            :return doppler_spectrum:  доплеровский спектр сигнала
+            doppler_spectrum    доплеровский спектр сигнала
 
         """
+        # Последовательность действий:
+        # вытащить значения для каждой поляризации, далее для каждой поляризации
+        # выделить дальностный канал с наибольшей энергией
+        # выполнить неэквидистантное преоборазование Фурье комплексных отсчетов
+        #
         complex_counts = dict()                             # словарь с отсчетами по значениям поляризаций
         t_axis = np.array(np.cumsum(self.period_us[0:-1]))  # создать вектор с осью времени
         # вывести данные для поляризации
@@ -309,15 +368,13 @@ class TrackPoint:
             # TODO: сделать суммирование результирующих спектров по нескольким каналам
             # TODO: добавить умножение на окно и совмещение окна с ДН антенны
 
-
         # в результате получить набор комплексных величин для каждого канала поляризации
         f_axis = np.linspace(0, 1e3, 10)        # сформировать вектор частот
-        mti = np.exp(-1j*2*np.pi*t_axis.transpose()*f_axis) # сформировать матрицу неэквидистантного преобразования
+        mti = np.exp(-1j*2*np.pi*t_axis.transpose()*f_axis)     # сформировать матрицу неэквидистантного преобразования
         # перемножить вектор комплексных отсчетов на матрицу
 
-
-    # вывести изображение поля
     def visualize(self):
+        """ вывести изображение поля """
         # Using linspace so that the endpoint of 360 is included...
         # azimuths = np.radians(self.azimuths)
         azimuths = np.radians(self.azimuths)

@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module dataset</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>dataset</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:d%3A%5Cprojects%5Ckolomna%5Ckolomna%5Cdataset.py">d:\projects\kolomna\kolomna\dataset.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="matplotlib.animation.html">matplotlib.animation</a><br>
+<a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="pandas.html">pandas</a><br>
+</td><td width="25%" valign=top><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="dataset.html#Track">Track</a>
+</font></dt><dt><font face="helvetica, arial"><a href="dataset.html#TrackPoint">TrackPoint</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Track">class <strong>Track</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Track">Track</a>(filename=None)<br>
+&nbsp;<br>
+Класс&nbsp;для&nbsp;работы&nbsp;с&nbsp;траекториями<br>
+&nbsp;<br>
+Attributes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;points(<a href="#TrackPoint">TrackPoint</a>):&nbsp;&nbsp;&nbsp;&nbsp;массив&nbsp;с&nbsp;точками&nbsp;траектории.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj_id(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;идентификатор&nbsp;объекта.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;имя&nbsp;исходного&nbsp;файла&nbsp;траетории.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Track-__init__"><strong>__init__</strong></a>(self, filename=None)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="Track-load_data"><strong>load_data</strong></a>(self, filename: str, verbose=False)</dt><dd><tt>Обработать&nbsp;файл&nbsp;траектории&nbsp;данные&nbsp;из&nbsp;файла<br>
+&nbsp;<br>
+Выполняет&nbsp;обработку&nbsp;выбранного&nbsp;файла&nbsp;данных&nbsp;(filename),&nbsp;и&nbsp;записывает&nbsp;(добавляет)&nbsp;данные&nbsp;в&nbsp;объект<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;имя&nbsp;файла&nbsp;траектории.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;verbose(bool):&nbsp;флаг&nbsp;текстового&nbsp;вывода&nbsp;статуса&nbsp;исполнения&nbsp;комманды.</tt></dd></dl>
+
+<dl><dt><a name="Track-output_image_fvs"><strong>output_image_fvs</strong></a>(self, transform='afft', n_features=16, n_means=None)</dt><dd><tt>Вывести&nbsp;отдельные&nbsp;вектора&nbsp;признаков&nbsp;для&nbsp;каждой&nbsp;точки&nbsp;зондирования.<br>
+&nbsp;<br>
+В&nbsp;цикле&nbsp;по&nbsp;точкам&nbsp;вывести&nbsp;их&nbsp;фрагменты,&nbsp;применив&nbsp;преобразование.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;transform(str):&nbsp;тип&nbsp;преобразования.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_features(int):&nbsp;размерность&nbsp;вектора&nbsp;признаков.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_means(int):&nbsp;усредняемых&nbsp;реализаций.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;кортеж,&nbsp;содержащий&nbsp;векторы&nbsp;признаков&nbsp;и&nbsp;цели.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(векторы&nbsp;признаков,&nbsp;цели),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;где&nbsp;вектры&nbsp;признаков&nbsp;-&nbsp;матрица<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;цели&nbsp;-&nbsp;вектора</tt></dd></dl>
+
+<dl><dt><a name="Track-visualize"><strong>visualize</strong></a>(self)</dt><dd><tt>Визуализация&nbsp;трека.<br>
+&nbsp;<br>
+Отладочная&nbsp;функция&nbsp;для&nbsp;просмотра&nbsp;изменения&nbsp;с&nbsp;принимаемого&nbsp;сигнала&nbsp;втечение&nbsp;регистрации&nbsp;трека.</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="Track-load_from_path"><strong>load_from_path</strong></a>(path='.\\dataset\\')</dt></dl>
+
+<dl><dt><a name="Track-set_to_csv"><strong>set_to_csv</strong></a>(dset, filename='dataset.csv', n_features=16, n_means=None)</dt><dd><tt>Запись&nbsp;базы&nbsp;данных&nbsp;в&nbsp;csv.<br>
+Для&nbsp;заданного&nbsp;набора&nbsp;данных&nbsp;сформировать&nbsp;векторы&nbsp;признаков&nbsp;и&nbsp;записать&nbsp;их&nbsp;в&nbsp;виде&nbsp;базы&nbsp;векторов&nbsp;признаков.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dset(list):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;массив&nbsp;треков&nbsp;(объект&nbsp;класса&nbsp;<a href="#Track">Track</a>).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;файл&nbsp;в&nbsp;который&nbsp;осуществляется&nbsp;вывод&nbsp;(нужно&nbsp;указывать&nbsp;с&nbsp;расширением).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_features(int):&nbsp;&nbsp;&nbsp;&nbsp;размерность&nbsp;векторов&nbsp;признаков.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_means(int):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;число&nbsp;реализаций&nbsp;(<a href="#TrackPoint">TrackPoint</a>&nbsp;объектов)&nbsp;по&nbsp;которым&nbsp;выполняется&nbsp;усреднение.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Файл&nbsp;filename.csv,&nbsp;содеражащий&nbsp;размеченную&nbsp;базу&nbsp;векторов&nbsp;признаков.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TrackPoint">class <strong>TrackPoint</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#TrackPoint">TrackPoint</a>(data:&nbsp;str)<br>
+&nbsp;<br>
+Класс&nbsp;точки&nbsp;маршрута<br>
+&nbsp;<br>
+Attributes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;point_id(int):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;идент.&nbsp;номер&nbsp;точки.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_azimuths(int):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;число&nbsp;лучей&nbsp;по&nbsp;азимуту.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;azimuths(list):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;список&nbsp;азимутов.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_ranges(int):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;число&nbsp;элементов&nbsp;разрешения&nbsp;по&nbsp;дальности.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;obj_id(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;идентификатор&nbsp;объекта.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;values(list):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;значения&nbsp;сигнала&nbsp;в&nbsp;каналах&nbsp;-&nbsp;список[даль]{поляр:[действ.,&nbsp;мним.]}.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;obj_range(float):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;оценка&nbsp;расстояния&nbsp;до&nbsp;объекта.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;obj_azimuth(float):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;оценка&nbsp;азимута&nbsp;объекта.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;track_id(int):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;идентификационный&nbsp;номер&nbsp;траектории.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TrackPoint-__init__"><strong>__init__</strong></a>(self, data: str)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="TrackPoint-get_doppler_fvs"><strong>get_doppler_fvs</strong></a>(self, n_features=16)</dt><dd><tt>Вывести&nbsp;доплеровский&nbsp;спектр&nbsp;сигнала<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_features:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;размерность&nbsp;вектора&nbsp;признаков<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;doppler_spectrum&nbsp;&nbsp;&nbsp;&nbsp;доплеровский&nbsp;спектр&nbsp;сигнала</tt></dd></dl>
+
+<dl><dt><a name="TrackPoint-get_feature_set"><strong>get_feature_set</strong></a>(self, mode='afft', n_features=16)</dt><dd><tt>Вывести&nbsp;строку&nbsp;признаков&nbsp;для&nbsp;одной&nbsp;отметки&nbsp;(объекта&nbsp;<a href="#TrackPoint">TrackPoint</a>)<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mode(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;метод&nbsp;выделения&nbsp;признаков<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_features(int):&nbsp;&nbsp;&nbsp;&nbsp;число&nbsp;отсчетов<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;вектор&nbsp;признаков</tt></dd></dl>
+
+<dl><dt><a name="TrackPoint-get_values_for_polarization"><strong>get_values_for_polarization</strong></a>(self, polar='HighHor', complex_component=None)</dt><dd><tt>Сформировать&nbsp;массив&nbsp;значений,&nbsp;полученных&nbsp;с&nbsp;приемного&nbsp;устройства<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;polar(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;тип&nbsp;поляризации&nbsp;-&nbsp;HighHor&nbsp;или&nbsp;HighVert<br>
+&nbsp;&nbsp;&nbsp;&nbsp;complex_component:&nbsp;&nbsp;&nbsp;&nbsp;компоненты&nbsp;None&nbsp;-&nbsp;обе,&nbsp;Re&nbsp;-&nbsp;действ,&nbsp;Im&nbsp;-&nbsp;мнимые,&nbsp;Amp&nbsp;-&nbsp;амплитуда&nbsp;(энергия)<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[list]&nbsp;--&nbsp;0&nbsp;-&nbsp;расстояние,&nbsp;1&nbsp;-&nbsp;азимуты,&nbsp;2&nbsp;-&nbsp;действ.&nbsp;и&nbsp;мнимая&nbsp;компоненты&nbsp;(если&nbsp;complex_component)</tt></dd></dl>
+
+<dl><dt><a name="TrackPoint-visualize"><strong>visualize</strong></a>(self)</dt><dd><tt>вывести&nbsp;изображение&nbsp;поля</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>
